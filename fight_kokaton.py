@@ -73,7 +73,7 @@ class Bird:
         引数2 screen：画面Surface
         """
         sum_mv = [0, 0] 
-        for k, mv in __class__.delta.items():
+        for k, mv in __class__.delta.items(): 
             if key_lst[k]:
                 sum_mv[0] += mv[0]
                 sum_mv[1] += mv[1]
