@@ -142,6 +142,31 @@ class Bomb:
         screen.blit(self.img, self.rct)
 
 
+class Score:
+    """
+    打ち落とした爆弾の数を表示するスコアに関するクラス
+    """
+    def __init__(self):
+        """
+        表示する文字のフォントを設定する
+        文字列Surfaceを生成する
+        """
+        self.fonto = pg.font.SysFont("hgp創英角ﾎﾟｯﾌﾟ体", 30)
+        self.img = self.fonto.render("スコア：0", 0, (0, 0, 255))
+        self.rct = self.img.get_rect()
+        self.rct.centerx = 100
+        self.rct.centery = HEIGHT-50
+    
+    def update(self, num: int, screen: pg.Surface):
+        """
+        引数に基づき現在のスコアを表示させる文字列Surfaceを生成する
+        引数1 num：現在のスコア
+        引数2 screen：画面Surface
+        """
+        self.img = self.fonto.render("スコア：" + str(num), num, (0, 0, 255))
+        screen.blit(self.img, self.rct)
+
+
 def main():
     pg.display.set_caption("たたかえ！こうかとん")
     screen = pg.display.set_mode((WIDTH, HEIGHT))    
@@ -149,10 +174,12 @@ def main():
     bird = Bird((300, 200))
     bomb = Bomb((255, 0, 0), 10)
     beam = None  # Beam(bird)  # ビームインスタンス生成
+    score = Score()
     # bomb2 = Bomb((0, 0, 255), 10) 青い爆弾
     bombs = [Bomb((255, 0, 0), 10) for _ in range(NUM_OF_BOMBS)]
     clock = pg.time.Clock()
     tmr = 0
+    num = 0
     while True:
         for event in pg.event.get():
             if event.type == pg.QUIT:
@@ -161,6 +188,7 @@ def main():
             #     # スペースキー押下でBeamクラスのインスタンス生成
                  beam = Beam(bird)            
         screen.blit(bg_img, [0, 0])
+        score.update(num, screen)
         
         for bomb in bombs:
             if bird.rct.colliderect(bomb.rct):
@@ -179,6 +207,7 @@ def main():
                     beam = None
                     bombs[i] = None
                     bird.change_img(6, screen)
+                    num += 1
                     pg.display.update()
 
         key_lst = pg.key.get_pressed()
